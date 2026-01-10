@@ -1,9 +1,9 @@
 {
   "name": "research-fixer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "title": "Research Fixer",
   "author": "Firepup650",
   "factorio_version": "2.0",
-  "dependencies": ["base >= 2.0"],
+  "dependencies": ["base >= 2.0", "? aai-programmable-structures"],
   "description": "Makes a minor fix to research ordering caused by some mods, may be fragile, please report issues if it breaks something"
 }
