@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.0.1
-Date: 2026-01-09
+Version: 1.0.3
+Date: 2026-01-13
+
+Features:
+ - Added a setting to enable/disable logging
 
 Misc Changes:
  - Added the changelog (oops)
