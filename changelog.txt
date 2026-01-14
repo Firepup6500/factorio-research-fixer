@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.0.3
+Version: 1.0.5
+Date: 2026-01-13
+
+  Bugfixes:
+    - Fixed the fact that I was stupid and duplicated the version number 1.0.3 when editing the changelog for version 1.0.4
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
 Date: 2026-01-13
 
   Bugfixes:
