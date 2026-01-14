@@ -1,15 +1,15 @@
-local enable_logging = settings.startup["enable-rfixer-logging"].value
-if enable_logging then
+local enableLogging = settings.startup["enable-rfixer-logging"].value
+if enableLogging then
     log("=== Research Fixer: Starting ===")
-    local tech_count = 0
-    for tech_name, tech_data in pairs(data.raw.technology) do
-        tech_count = tech_count + 1
+    local techCount = 0
+    for techName, techData in pairs(data.raw.technology) do
+        techCount = techCount + 1
     end
-    log("Total tech count: " .. tech_count)
+    log("Total tech count: " .. techCount)
 end
 
 -- On vanilla researches this is redundant, but it could be useful if I implement compatibility with some other mod adding custom science packs (e.g. maybe Krastorio?)
-local science_pack_to_tech = {
+local sciencePackToTech = {
     ["automation-science-pack"] = "automation-science-pack",
     ["logistic-science-pack"] = "logistic-science-pack",
     ["military-science-pack"] = "military-science-pack",
@@ -19,85 +19,84 @@ local science_pack_to_tech = {
     ["space-science-pack"] = "space-science-pack",
 }
 
-local debug_researches = {}
+local debugResearches = {}
 local debug = false
 
-local function has_prerequisite_in_chain(tech_name, target_tech_name, visited)
+local function hasPrereqInChain(techName, targetTechName, visited)
     visited = visited or {}
 
-    if visited[tech_name] then
+    if visited[techName] then
         return false
     end
-    visited[tech_name] = true
+    visited[techName] = true
 
-    local tech = data.raw.technology[tech_name]
+    local tech = data.raw.technology[techName]
     if not tech or not tech.prerequisites then
-        if debug then log("DEBUG: " .. tech_name .. " has no prereqs!") end
+        if debug and enableLogging then log("DEBUG: " .. techName .. " has no prereqs!") end
         return false
     end
 
     for _, prereq in ipairs(tech.prerequisites) do
-        if prereq == target_tech_name then
-            if debug then log("DEBUG: " .. tech_name .. " has the prereq of " .. target_tech_name) end
+        if prereq == targetTechName then
+            if debug and enableLogging then log("DEBUG: " .. techName .. " has the prereq of " .. targetTechName) end
             return true
         end
-        if has_prerequisite_in_chain(prereq, target_tech_name, visited) then
+        if hasPrereqInChain(prereq, targetTechName, visited) then
             return true
         end
     end
 
-    if debug then log("DEBUG: " .. tech_name .. " does not have the prereq of " .. target_tech_name) end
+    if debug and enableLogging then log("DEBUG: " .. techName .. " does not have the prereq of " .. targetTechName) end
     return false
 end
 
 local processed = {}
-local modifications_made = 0
-local debugging = ""
-local function process_tech(tech_name)
-    if processed[tech_name] then
+local modificationsMade = 0
+local function processTech(techName)
+    if processed[techName] then
         return
     end
-    if debug_researches[tech_name] then debug = true end
-    processed[tech_name] = true
+    if debugResearches[techName] then debug = true end
+    processed[techName] = true
 
-    local tech_data = data.raw.technology[tech_name]
-    if not tech_data then
+    local techData = data.raw.technology[techName]
+    if not techData then
         return
     end
 
     -- We loop over prereqs here to ensure we only add science requirements to the first one in a series, instead of all the researches in said series    
     -- We still only process each research once overall, due to the `processed` table
-    if tech_data.prerequisites then
-        for _, prereq in ipairs(tech_data.prerequisites) do
-            process_tech(prereq)
+    if techData.prerequisites then
+        for _, prereq in ipairs(techData.prerequisites) do
+            processTech(prereq)
         end
     end
 
-    if tech_data.unit and tech_data.unit.ingredients then
-        for _, ingredient in ipairs(tech_data.unit.ingredients) do
-            local ingredient_name = ingredient[1] or ingredient.name
-            local required_tech = science_pack_to_tech[ingredient_name]
+    if techData.unit and techData.unit.ingredients then
+        for _, ingredient in ipairs(techData.unit.ingredients) do
+            local ingredientName = ingredient[1] or ingredient.name
+            local requiredTech = sciencePackToTech[ingredientName]
 
-            if required_tech and data.raw.technology[required_tech] then
-                local prereqs = tech_data.prerequisites
-                local prereqs_str = (prereqs and next(prereqs) ~= nil) and table.concat(prereqs, ", ") or "NONE"
-                if debug then log("DEBUG: " .. tech_name .. " has prereqs " .. prereqs_str) end
-                if not has_prerequisite_in_chain(tech_name, required_tech) then
-                    if not tech_data.prerequisites then
-                        tech_data.prerequisites = {}
+            if requiredTech and data.raw.technology[requiredTech] then
+                local prereqs = techData.prerequisites
+                local prereqsStr = (prereqs and next(prereqs) ~= nil) and table.concat(prereqs, ", ") or "NONE"
+                if debug and enableLogging then log("DEBUG: " .. techName .. " has prereqs " .. prereqsStr) end
+                if not hasPrereqInChain(techName, requiredTech) then
+                    if not techData.prerequisites then
+                        techData.prerequisites = {}
                     end
-                    table.insert(tech_data.prerequisites, required_tech)
-                    modifications_made = modifications_made + 1
-                    if enable_logging then log("Modified: " .. tech_name .. " now requires " .. required_tech .. ", previously only required the following: " .. prereqs_str) end
+                    table.insert(techData.prerequisites, requiredTech)
+                    modificationsMade = modificationsMade + 1
+                    if enableLogging then log("Modified: " .. techName .. " now requires " .. requiredTech .. ", previously only required the following: " .. prereqsStr) end
                 end
             end
         end
     end
-    if debug_researches[tech_name] then debug = false end
+    if debugResearches[techName] then debug = false end
 end
 
-for tech_name in pairs(data.raw.technology) do
-    process_tech(tech_name)
+for techName in pairs(data.raw.technology) do
+    processTech(techName)
 end
 
-if enable_logging then log("=== Research Fixer: Complete. Made " .. modifications_made .. " modifications ===") end
+if enableLogging then log("=== Research Fixer: Complete. Made " .. modificationsMade .. " modifications ===") end
