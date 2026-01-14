@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.6
+Date: 2026-01-13
+
+  Bugfixes:
+    - Fixed two missing spaces in the changelog, causing the game to fail to parse it
+---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 2026-01-13
 
@@ -18,8 +24,8 @@ Date: 2026-01-13
     - Added a setting to enable/disable logging
 
   Misc Changes:
-   - Added the changelog (oops)
-   - More code cleanup
+    - Added the changelog (oops)
+    - More code cleanup
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2026-01-09
