@@ -2,31 +2,36 @@
 Version: 1.0.3
 Date: 2026-01-13
 
-Features:
- - Added a setting to enable/disable logging
+  Bugfixes:
+    - Fixed the changelog format
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2026-01-13
 
-Misc Changes:
- - Added the changelog (oops)
- - More code cleanup
+  Features:
+    - Added a setting to enable/disable logging
+
+  Misc Changes:
+   - Added the changelog (oops)
+   - More code cleanup
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2026-01-09
 
-Bugfixes:
- - Now has an optional dependacy on aai-programmable-structures, in order to fix researches it breaks by editing the circuit-network research
+  Bugfixes:
+    - Now has an optional dependacy on aai-programmable-structures, in order to fix researches it breaks by editing the circuit-network research
 
-Misc Changes:
- - Code cleanup
+  Misc Changes:
+    - Code cleanup
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2026-01-09
 
-Misc Changes:
- - Added a thumbnail (I forgot to add it sooner)
+  Misc Changes:
+    - Added a thumbnail (I forgot to add it sooner)
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-01-09
 
-Information:
- - Initial Version
----------------------------------------------------------------------------------------------------
+  Information:
+    - Initial Version
